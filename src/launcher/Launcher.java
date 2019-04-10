@@ -465,5 +465,6 @@ public class Launcher
 		games.put("Dishonored2.exe", "Dishonored 2");
 		games.put("sekiro.exe", "Sekiro Shadows Die Twice");
 		games.put("r5apex.exe", "Apex Legends");
+		games.put("SlayTheSpire", "Slay the Spire");
 	}
 }
