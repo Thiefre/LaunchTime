@@ -308,7 +308,7 @@ public class Launcher
 		games.put("Shadowrun.exe", "Shadowrun");
 		games.put("DungeonoftheEndless.exe", "Dungeon of the Endless");
 		games.put("Hon.exe", "Heroes of Newerth");
-		games.put("mabinogi.exe", "Mabinogi");
+		games.put("Mabinogi.exe", "Mabinogi");
 		games.put("CoD2MP_s.exe", "Call of Duty 2:");
 		games.put("CoDWaWmp.exe", "Call of Duty: World at War");
 		games.put("heroes.exe", "Mabinogi Heroes (Vindictus)  ");
@@ -465,6 +465,6 @@ public class Launcher
 		games.put("Dishonored2.exe", "Dishonored 2");
 		games.put("sekiro.exe", "Sekiro Shadows Die Twice");
 		games.put("r5apex.exe", "Apex Legends");
-		games.put("SlayTheSpire", "Slay the Spire");
+		games.put("SlayTheSpire.exe", "Slay the Spire");
 	}
 }
