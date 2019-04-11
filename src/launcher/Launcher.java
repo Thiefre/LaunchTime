@@ -64,7 +64,7 @@ public class Launcher
 		games.put("diablo.exe", "Diablo");
 		games.put("diablo ii.exe", "Diablo 2");
 		games.put("left4dead.exe", "Left 4 Dead");
-		games.put("minecraft.exe", "Minecraft");
+		games.put("MinecraftLauncher.exe", "Minecraft");
 		games.put("smite.exe", "Smite");
 		games.put("bf4.exe", "Battlefield 4");
 		games.put("AoK HD.exe", "Age of Empires II");
@@ -466,5 +466,7 @@ public class Launcher
 		games.put("sekiro.exe", "Sekiro Shadows Die Twice");
 		games.put("r5apex.exe", "Apex Legends");
 		games.put("SlayTheSpire.exe", "Slay the Spire");
+		games.put("Cuphead.exe", "Cuphead");
+		games.put("WizardOfLegend.exe", "Wizard of Legend");
 	}
 }
