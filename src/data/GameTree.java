@@ -1,15 +1,29 @@
 package data;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 
 
 public class GameTree 
 {
 	public Game root;
+	public File f = new File("C:/LaunchTime/data.txt");
+	//public File r = new File("C:/LaunchTime/recents.txt");
 	
 	
 	public GameTree()
 	{
+		new File("C:/LaunchTime").mkdirs();
+		try {
+			f.createNewFile();
+		//	r.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public GameTree(ArrayList<Game> gl)
@@ -30,20 +44,30 @@ public class GameTree
 		}
 		else
 		{
-			root.add(g);
+			return root.add(g);
 		}
 		return false;
 	}
 	
-	public ArrayList<Game> toArrayList()
+	public ArrayList<Game> toArrayList() throws IOException
 	{
 		ArrayList<Game> list = new ArrayList<Game>();
+		Writer w = new FileWriter(this.f, false);
+		BufferedWriter bw = new BufferedWriter(w);
 		
 		if(root.getChildren() != null)
 		{
 			list = root.getChildren();
 		}
 		list.add(root);
+		
+		for(Game game : list)
+		{
+			bw.write(game.name+"@"+game.path);
+			bw.newLine();
+		}
+		bw.close();
+		w.close();
 		return list;
 	}
 	
@@ -65,7 +89,6 @@ public class GameTree
 				keyGames.add(g);
 			}
 		}
-		
 		return keyGames;
 	}
 

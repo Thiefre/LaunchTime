@@ -1,7 +1,13 @@
 package launcher;
 
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 import data.Game;
@@ -11,14 +17,37 @@ public class Launcher
 {
 	public GameTree g = new GameTree();
 	public static TreeMap<String, String> games = new TreeMap<String, String>();
+	File f = new File("C:/LaunchTime/data.txt");
 	
 	public Launcher()
 	{
 		initGames();
+		try {
+			hasGames();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void hasGames() throws IOException
+	{
+		if(f.exists())
+		{
+				Reader r = new FileReader(f);
+				BufferedReader br = new BufferedReader(r);
+				String s = br.readLine();
+				while(s != null)
+				{
+					String[] as = s.split("@");
+					g.insert(new Game(as[0], as[1]));
+					s = br.readLine();
+				}
+		}
 	}
 	
 	public void searchGames(File f)
 	{
+		
 		if(f.listFiles() != null)
 		{
 		File[] files = f.listFiles();
@@ -30,7 +59,8 @@ public class Launcher
 			}
 			else if(file.canExecute() && isGame(file))
 			{
-				g.insert(new Game(games.get(file.getName()), file.getAbsolutePath(), null));
+				Game game = new Game(games.get(file.getName()), file.getAbsolutePath());				
+				g.insert(new Game(game.name, game.path));
 			}
 		}
 		}

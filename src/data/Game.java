@@ -8,17 +8,15 @@ public class Game
 {
 	public String name;
 	public String path;
-	public ImageIcon image;
 	
 	Game parent;
 	Game left;
 	Game right;
 	
-	public Game(String name, String path, ImageIcon image)
+	public Game(String name, String path)
 	{
 		this.name = name;
 		this.path = path;
-		this.image = image;
 	}
 	
 	public boolean add(Game g)
@@ -35,6 +33,7 @@ public class Game
 			else
 			{
 				left.add(g);
+				return true;
 			}
 		}
 		else if(name.compareTo(g.name) < 0)
@@ -48,6 +47,7 @@ public class Game
 			else
 			{
 				right.add(g);
+				return true;
 			}
 		}
 		return false;

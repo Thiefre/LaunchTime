@@ -8,8 +8,11 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -23,7 +26,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import data.Game;
-import data.GameTree;
 import launcher.Launcher;
 
 public class GUI extends JFrame{
@@ -51,11 +53,12 @@ public class GUI extends JFrame{
 	JButton syncBut, libBut, upBut, searchBut;
 	Desktop desktop = Desktop.getDesktop();
 
-	JLabel recent;
+	//JLabel recent = new JLabel();
 	
 	JTextField searchBar;
 		
 	ArrayList<Game> list = new ArrayList<Game>();
+	ArrayList<Game> recents = new ArrayList<Game>();
 	
 	Launcher launcher = new Launcher();
 	File f = new File("C:/");
@@ -98,8 +101,10 @@ public class GUI extends JFrame{
 		searchBar.setBackground(grayMENU);
 		searchBar.setForeground(Color.WHITE);
 
-		recent = new JLabel("Recent");
-		recent.setForeground(blueTXT);
+	//	recent.setText("Recents");
+	//	recent.setForeground(blueTXT);
+	//	iconPanel.setLayout(new BoxLayout(iconPanel, BoxLayout.Y_AXIS));
+	//	iconPanel.add(recent);
 
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 		topPanel.add(syncBut);
@@ -108,7 +113,6 @@ public class GUI extends JFrame{
 		topPanel.add(searchBar);
 		topPanel.add(searchBut);
 
-		iconPanel.add(recent);
 
 		mainPanel.setLayout(cardLayout);
 		
@@ -136,16 +140,21 @@ public class GUI extends JFrame{
 		this.getContentPane().add(mainPanel);
 		this.setVisible(true);
 		this.setResizable(true);
-		
+		searchAndAdd();
 	}
 	
 	public void searchAndAdd()
 	{
-		launcher.searchGames(f);
-		list = launcher.g.toArrayList();
+		try {
+			list = launcher.g.toArrayList();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
 		
 		libPanel.removeAll();
 		libPanel.revalidate();
+		iconPanel.removeAll();
+		iconPanel.revalidate();
 		
 		for(Game g : list)
 		{
@@ -156,6 +165,22 @@ public class GUI extends JFrame{
 				{
 					try {
 						desktop.open(new File(g.path));
+						
+						if(!recents.contains(g))
+						{
+/*Code for recents tab		recents.add(g);
+							if(recents.size() == 4)
+							{
+								recents.remove(recents.size()-1);
+							}
+							Writer w = new FileWriter(launcher.g.r, true);
+							BufferedWriter bw = new BufferedWriter(w);
+							bw.write(g.name+"@"+g.path);
+							bw.newLine();
+							
+							bw.close();
+							w.close();	*/
+						}
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -163,7 +188,25 @@ public class GUI extends JFrame{
 			});
 			libPanel.add(gBut);
 		}
+		for(Game g : recents)
+		{
+			GameButton aBut = new GameButton(g);
+			aBut.setText("");
+			aBut.setPreferredSize(new Dimension(50, 75));
+			aBut.addActionListener(new ActionListener( ) {
+				public void actionPerformed(ActionEvent e)
+				{
+					try {
+						desktop.open(new File(g.path));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			});
+			iconPanel.add(aBut);
+		}
 		libPanel.updateUI();
+		iconPanel.updateUI();
 	}
 	
 	public class actionListener implements ActionListener{
@@ -175,6 +218,7 @@ public class GUI extends JFrame{
 				int reply = JOptionPane.showConfirmDialog(null, "Do you want to sync your system?");
 				if(reply == JOptionPane.YES_OPTION)
 				{
+					launcher.searchGames(f);
 					searchAndAdd();
 				}
 			}
@@ -199,6 +243,22 @@ public class GUI extends JFrame{
 						{
 							try {
 								desktop.open(new File(g.path));
+								
+								if(!recents.contains(g))
+								{
+			/*Code for Recents tab				recents.add(g);
+									if(recents.size() == 4)
+									{
+										recents.remove(recents.size()-1);
+									}
+									Writer w = new FileWriter(launcher.g.r, true);
+									BufferedWriter bw = new BufferedWriter(w);
+									bw.write(g.name+"@"+g.path);
+									bw.newLine();
+									
+									bw.close();
+									w.close();	*/
+								}
 							} catch (IOException e1) {
 								e1.printStackTrace();
 							}
@@ -215,6 +275,5 @@ public class GUI extends JFrame{
 	public static void main(String[] args)
 	{
 		GUI screen = new GUI();
-		screen.searchAndAdd();
 	}
 }
