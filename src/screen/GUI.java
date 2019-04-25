@@ -38,24 +38,25 @@ public class GUI extends JFrame{
 	Color grayMENU = new Color(55, 60, 68);
 	Color grayBUT = new Color(75, 80, 95);
 
-	JPanel topPanel = new JPanel();
-	JPanel iconPanel = new JPanel();
-	JPanel mainPanel = new JPanel(new BorderLayout());	
-	JPanel libPanel = new JPanel();
-	JPanel upPanel = new JPanel();
+	public JPanel topPanel = new JPanel();
+	public JPanel iconPanel = new JPanel();
+	public JPanel mainPanel = new JPanel(new BorderLayout());	
+	public JPanel libPanel = new JPanel();
+	public JPanel upPanel = new JPanel();
 
-	JButton syncBut, libBut, upBut;
-	Desktop desktop = Desktop.getDesktop();
+	public JButton syncBut, libBut, upBut;
+	public Desktop desktop = Desktop.getDesktop();
 
 	JLabel recent;
-	
-	ArrayList<Game> list = new ArrayList<Game>();
-	
-	Launcher launcher = new Launcher();
+
 	File f = new File("C:/");
 
-	public GUI() {
-		super("LaunchTime");
+	public GUI(String s) {
+		super(s);
+	}
+	
+	public void init()
+	{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(1440, 980);
 		
@@ -119,47 +120,17 @@ public class GUI extends JFrame{
 		this.getContentPane().add(mainPanel);
 		this.setVisible(true);
 		this.setResizable(true);
-		
 	}
-	
-	public void searchAndAdd()
-	{
-		launcher.searchGames(f);
-		list = launcher.g.toArrayList();
-		
-		libPanel.removeAll();
-		libPanel.revalidate();
-		
-		for(Game g : list)
-		{
-			GameButton gBut = new GameButton(g);
-			gBut.setPreferredSize(new Dimension(150, 150));
-			gBut.addActionListener(new ActionListener( ) {
-				public void actionPerformed(ActionEvent e)
-				{
-					try {
-						desktop.open(new File(g.path));
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-			});
-			libPanel.add(gBut);
-		}
-		libPanel.updateUI();
-	}
-	
 	public class actionListener implements ActionListener{
 		public void actionPerformed(ActionEvent event) {
 			JButton src = (JButton) event.getSource();
 
 			if(src.equals(syncBut))
 			{	
-				launcher.g = new GameTree();
 				int reply = JOptionPane.showConfirmDialog(null, "Do you want to sync your system?");
 				if(reply == JOptionPane.YES_OPTION)
 				{
-					searchAndAdd();
+					launcher.searchAndAdd();
 				}
 			}
 				
@@ -170,12 +141,6 @@ public class GUI extends JFrame{
 				cardLayout.show(mainPanel, "Updates");
 			}
 		}
-	}
-	
-	public static void main(String[] args)
-	{
-		GUI screen = new GUI();
-		screen.searchAndAdd();
 	}
 }
 

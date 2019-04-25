@@ -4,12 +4,12 @@ import java.io.File;
 
 public enum AcceptedFile {
 	ACCEPT,DECLINE;
-	static String[] names = {"PerfLogs", "Users", "Windows", "Program Files", "Intel", "Logs", "Common Files", "data", "Data"
+	static String[] names = {"PerfLogs", "Users", "Windows", "Program Files", "Intel", "Logs", "Common Files"
 			
 	};
 	
-	static String[] keyWords = {"Windows", "NVIDIA", "MSI", "Google", "AMD", "Microsoft", "Graphics", "config", "patch", "resource", "server",
-			"graphics", "drivers", "DirectX", "sound", "music"
+	static String[] keyWords = {"Windows", "NVIDIA", "MSI", "Google", "AMD", "Microsoft", "data", "Data", "Graphics", "config", "patch", "resource", "server",
+			"graphics", "drivers", "DirectX", "sound", "music", "log", 
 			
 	};
 	
