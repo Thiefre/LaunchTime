@@ -52,6 +52,15 @@ public class Game
 		}
 		return false;
 	}
+	public boolean equals(Object o)
+	{
+		Game g = (Game) o;
+		if(this.name.equalsIgnoreCase(g.name))
+		{
+			return true;
+		}
+		return false;
+	}
 	
 	public ArrayList<Game> getChildren()
 	{

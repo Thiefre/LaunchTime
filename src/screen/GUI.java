@@ -8,10 +8,13 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 
@@ -53,7 +56,7 @@ public class GUI extends JFrame{
 	JButton syncBut, libBut, upBut, searchBut;
 	Desktop desktop = Desktop.getDesktop();
 
-	//JLabel recent = new JLabel();
+	JLabel recent = new JLabel();
 	
 	JTextField searchBar;
 		
@@ -101,10 +104,10 @@ public class GUI extends JFrame{
 		searchBar.setBackground(grayMENU);
 		searchBar.setForeground(Color.WHITE);
 
-	//	recent.setText("Recents");
-	//	recent.setForeground(blueTXT);
-	//	iconPanel.setLayout(new BoxLayout(iconPanel, BoxLayout.Y_AXIS));
-	//	iconPanel.add(recent);
+		recent.setText("Recents");
+		recent.setForeground(blueTXT);
+		iconPanel.setLayout(new BoxLayout(iconPanel, BoxLayout.Y_AXIS));
+		iconPanel.add(recent);
 
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 		topPanel.add(syncBut);
@@ -140,7 +143,28 @@ public class GUI extends JFrame{
 		this.getContentPane().add(mainPanel);
 		this.setVisible(true);
 		this.setResizable(true);
+		try {
+			initRecent();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		searchAndAdd();
+	}
+	
+	public void initRecent() throws IOException
+	{
+		if(f.exists())
+		{
+				Reader r = new FileReader(launcher.g.r);
+				BufferedReader br = new BufferedReader(r);
+				String s = br.readLine();
+				while(s != null)
+				{
+					String[] as = s.split("@");
+					recents.add(new Game(as[0], as[1]));
+					s = br.readLine();
+				}
+		}
 	}
 	
 	public void searchAndAdd()
@@ -168,18 +192,22 @@ public class GUI extends JFrame{
 						
 						if(!recents.contains(g))
 						{
-/*Code for recents tab		recents.add(g);
+							recents.add(g);
 							if(recents.size() == 4)
 							{
 								recents.remove(recents.size()-1);
 							}
-							Writer w = new FileWriter(launcher.g.r, true);
+							
+							Writer w = new FileWriter(launcher.g.r, false);
 							BufferedWriter bw = new BufferedWriter(w);
-							bw.write(g.name+"@"+g.path);
-							bw.newLine();
+							for(Game game : recents)
+							{
+								bw.write(game.name+"@"+game.path);
+								bw.newLine();
+							}
 							
 							bw.close();
-							w.close();	*/
+							w.close();
 						}
 					} catch (IOException e1) {
 						e1.printStackTrace();
@@ -246,18 +274,22 @@ public class GUI extends JFrame{
 								
 								if(!recents.contains(g))
 								{
-			/*Code for Recents tab				recents.add(g);
+									recents.add(g);
 									if(recents.size() == 4)
 									{
 										recents.remove(recents.size()-1);
 									}
-									Writer w = new FileWriter(launcher.g.r, true);
+									
+									Writer w = new FileWriter(launcher.g.r, false);
 									BufferedWriter bw = new BufferedWriter(w);
-									bw.write(g.name+"@"+g.path);
-									bw.newLine();
+									for(Game game : recents)
+									{
+										bw.write(game.name+"@"+game.path);
+										bw.newLine();
+									}
 									
 									bw.close();
-									w.close();	*/
+									w.close();
 								}
 							} catch (IOException e1) {
 								e1.printStackTrace();

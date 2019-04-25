@@ -12,7 +12,7 @@ public class GameTree
 {
 	public Game root;
 	public File f = new File("C:/LaunchTime/data.txt");
-	//public File r = new File("C:/LaunchTime/recents.txt");
+	public File r = new File("C:/LaunchTime/recents.txt");
 	
 	
 	public GameTree()
@@ -20,7 +20,7 @@ public class GameTree
 		new File("C:/LaunchTime").mkdirs();
 		try {
 			f.createNewFile();
-		//	r.createNewFile();
+			r.createNewFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
