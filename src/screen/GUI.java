@@ -12,12 +12,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import data.Game;
 import data.GameTree;
@@ -38,31 +41,34 @@ public class GUI extends JFrame{
 	Color grayMENU = new Color(55, 60, 68);
 	Color grayBUT = new Color(75, 80, 95);
 
-	public JPanel topPanel = new JPanel();
-	public JPanel iconPanel = new JPanel();
-	public JPanel mainPanel = new JPanel(new BorderLayout());	
-	public JPanel libPanel = new JPanel();
-	public JPanel upPanel = new JPanel();
+	JPanel topPanel = new JPanel();
+	JPanel iconPanel = new JPanel();
+	JPanel mainPanel = new JPanel(new BorderLayout());	
+	JPanel libPanel = new JPanel();
+	JPanel upPanel = new JPanel();
+	JPanel searchPanel = new JPanel();
 
-	public JButton syncBut, libBut, upBut;
-	public Desktop desktop = Desktop.getDesktop();
+	JButton syncBut, libBut, upBut, searchBut;
+	Desktop desktop = Desktop.getDesktop();
 
 	JLabel recent;
-
+	
+	JTextField searchBar;
+		
+	ArrayList<Game> list = new ArrayList<Game>();
+	
+	Launcher launcher = new Launcher();
 	File f = new File("C:/");
 
-	public GUI(String s) {
-		super(s);
-	}
-	
-	public void init()
-	{
+	public GUI() {
+		super("LaunchTime");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(1440, 980);
 		
 		topPanel.setBackground(grayMENU);
 		mainPanel.setBackground(grayBG);
 		iconPanel.setBackground(grayICONS);
+		searchPanel.setBackground(grayMENU);
 
 		syncBut = new JButton("Sync");
 		syncBut.setBackground(grayBUT);
@@ -74,6 +80,9 @@ public class GUI extends JFrame{
 		upBut = new JButton("Updates");
 		upBut.setBackground(grayBUT);
 		upBut.setForeground(Color.WHITE);
+		searchBut = new JButton("Search");
+		searchBut.setBackground(grayBUT);
+		searchBut.setForeground(Color.WHITE);
 
 		actionListener al = new actionListener();
 		
@@ -83,14 +92,21 @@ public class GUI extends JFrame{
 		libBut.addActionListener(al);
 		upBut.addActionListener(al);
 		syncBut.addActionListener(al);
+		searchBut.addActionListener(al);
+		
+		searchBar = new JTextField();
+		searchBar.setBackground(grayMENU);
+		searchBar.setForeground(Color.WHITE);
 
 		recent = new JLabel("Recent");
 		recent.setForeground(blueTXT);
 
-		topPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 7));
+		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 		topPanel.add(syncBut);
 		topPanel.add(libBut);
 		topPanel.add(upBut);
+		topPanel.add(searchBar);
+		topPanel.add(searchBut);
 
 		iconPanel.add(recent);
 
@@ -106,13 +122,13 @@ public class GUI extends JFrame{
 		mainPanel.add(upPanel, "Updates");
 		
 		cardLayout.show(mainPanel,  "Library");
-		
-
+				
 		upPanel.setBackground(grayBG);
 		upPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 20, 7));
-		JLabel changes = new JLabel("This is LaunchTime version 0.1.");
+		JTextArea changes = new JTextArea("This is LaunchTime v0.2 added: search bar, search button, search functionality, recent functionality, updated updates");
+		changes.setBackground(grayBG);
 		changes.setForeground(Color.WHITE);
-		upPanel.add(changes);
+		upPanel.add(changes, BorderLayout.CENTER);
 		
 		this.add(mainPanel);
 		this.add(topPanel, BorderLayout.NORTH);
@@ -120,7 +136,36 @@ public class GUI extends JFrame{
 		this.getContentPane().add(mainPanel);
 		this.setVisible(true);
 		this.setResizable(true);
+		
 	}
+	
+	public void searchAndAdd()
+	{
+		launcher.searchGames(f);
+		list = launcher.g.toArrayList();
+		
+		libPanel.removeAll();
+		libPanel.revalidate();
+		
+		for(Game g : list)
+		{
+			GameButton gBut = new GameButton(g);
+			gBut.setPreferredSize(new Dimension(150, 150));
+			gBut.addActionListener(new ActionListener( ) {
+				public void actionPerformed(ActionEvent e)
+				{
+					try {
+						desktop.open(new File(g.path));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			});
+			libPanel.add(gBut);
+		}
+		libPanel.updateUI();
+	}
+	
 	public class actionListener implements ActionListener{
 		public void actionPerformed(ActionEvent event) {
 			JButton src = (JButton) event.getSource();
@@ -130,7 +175,7 @@ public class GUI extends JFrame{
 				int reply = JOptionPane.showConfirmDialog(null, "Do you want to sync your system?");
 				if(reply == JOptionPane.YES_OPTION)
 				{
-					launcher.searchAndAdd();
+					searchAndAdd();
 				}
 			}
 				
@@ -140,7 +185,36 @@ public class GUI extends JFrame{
 			if(src.equals(upBut)) {
 				cardLayout.show(mainPanel, "Updates");
 			}
+			if(src.equals(searchBut)) {
+				String text = searchBar.getText();
+				libPanel.removeAll();
+				libPanel.revalidate();
+				
+				for(Game g : launcher.g.search(text))
+				{
+					GameButton gBut = new GameButton(g);
+					gBut.setPreferredSize(new Dimension(150, 150));
+					gBut.addActionListener(new ActionListener( ) {
+						public void actionPerformed(ActionEvent e)
+						{
+							try {
+								desktop.open(new File(g.path));
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+					libPanel.add(gBut);
+				}
+				libPanel.updateUI();
+				launcher.g.search(text);
+			}
 		}
 	}
+	
+	public static void main(String[] args)
+	{
+		GUI screen = new GUI();
+		screen.searchAndAdd();
+	}
 }
-

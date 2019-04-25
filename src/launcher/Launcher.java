@@ -1,37 +1,20 @@
 package launcher;
 
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.TreeMap;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 import data.Game;
 import data.GameTree;
-import screen.GUI;
-import screen.GameButton;
 
 public class Launcher 
 {
-	public GameTree gt = new GameTree();
-	public GUI g;
+	public GameTree g = new GameTree();
 	public static TreeMap<String, String> games = new TreeMap<String, String>();
 	
-	public Launcher(GUI g)
+	public Launcher()
 	{
 		initGames();
-		this.g = g;
-	}
-	
-	public void start()
-	{
-		
 	}
 	
 	public void searchGames(File f)
@@ -47,7 +30,7 @@ public class Launcher
 			}
 			else if(file.canExecute() && isGame(file))
 			{
-				gt.insert(new Game(games.get(file.getName()), file.getAbsolutePath(), null));
+				g.insert(new Game(games.get(file.getName()), file.getAbsolutePath(), null));
 			}
 		}
 		}
@@ -486,39 +469,5 @@ public class Launcher
 		games.put("Cuphead.exe", "Cuphead");
 		games.put("WizardOfLegend.exe", "Wizard of Legend");
 	}
-	
-	public void searchAndAdd()
-	{
-		this.searchGames(new File("C:/"));
-		
-		g.libPanel.removeAll();
-		g.libPanel.revalidate();
-		
-		for(Game game : gt.toArrayList())
-		{
-			GameButton gBut = new GameButton(game);
-			gBut.setPreferredSize(new Dimension(150, 150));
-			gBut.addActionListener(new ActionListener( ) {
-				public void actionPerformed(ActionEvent e)
-				{
-					try {
-						g.desktop.open(new File(game.path));
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-			});
-			g.libPanel.add(gBut);
-		}
-		g.libPanel.updateUI();
-	}
-	
-	public static void main(String[] args)
-	{
-		Launcher l = new Launcher(new GUI("LaunchTime"));
-		
-		l.start();
-	}
-	
 }
 
